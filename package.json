@@ -1,0 +1,40 @@
+{
+  "name": "rag-express-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "RAG system with Express API",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon --no-deprecation src/server.js",
+    "dev": "node --watch app.js"
+  },
+  "dependencies": {
+    "@langchain/community": "^0.0.21",
+    "@langchain/openai": "^0.0.12",
+    "@prisma/client": "^6.16.3",
+    "cors": "^2.8.5",
+    "d3-dsv": "^2.0.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "langchain": "^0.0.212",
+    "multer": "^1.4.5-lts.1",
+    "openai": "^4.28.0",
+    "pdf-parse": "^1.1.1",
+    "pg": "^8.11.3",
+    "punycode": "^2.3.1",
+    "whatwg-url": "^15.1.0"
+  },
+  "keywords": [
+    "rag",
+    "express",
+    "langchain",
+    "openai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "nodemon": "^3.1.10",
+    "prisma": "^6.16.3"
+  }
+}
