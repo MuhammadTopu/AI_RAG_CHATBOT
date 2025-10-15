@@ -3,7 +3,7 @@ import { chat } from './chat.js';
 
 const router = express.Router();
 
-router.post('/api/chat', async (req, res) => {
+router.post('/chat', async (req, res) => {
   try {
     const { question } = req.body;
 
