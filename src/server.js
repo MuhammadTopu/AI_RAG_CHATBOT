@@ -1,10 +1,7 @@
 import express from 'express';
-import multer from 'multer';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import { indexTheDocs } from './rag_system/ragSystem.js';
-import { chat } from './chat/chat.js';
+import { dirname } from 'path';
 import chatRoute from './chat/router.js';
 import ragRoute from './rag_system/router.js';
 import cors from 'cors';

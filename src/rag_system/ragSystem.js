@@ -22,9 +22,9 @@ const config = {
     port: 5433,
     user: "postgres",
     password: "root",
-    database: "testB_langchains",
+    database: "ashisai",
   },
-  tableName: "testlangchainjs",
+  tableName: "vectorDB",
   columns: {
     idColumnName: "id",
     vectorColumnName: "vector",
@@ -54,6 +54,12 @@ export async function indexTheDocs(filePath) {
       const loader = new CSVLoader(filePath);
       docs = await loader.load();
     } else if (fileExtension === '.csv') {
+      const loader = new CSVLoader(filePath);
+      docs = await loader.load();
+    } else if (fileExtension === '.txt') {
+      const loader = new CSVLoader(filePath);
+      docs = await loader.load();
+    } else if (fileExtension === '.docx') {
       const loader = new CSVLoader(filePath);
       docs = await loader.load();
     } else {
@@ -96,6 +102,16 @@ export async function indexTheDocs(filePath) {
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
+    throw error;
+  }
+}
+
+export async function clearVectorStore() {
+  try {
+    await vectorStore.delete({ filter: {} });
+    console.log("Vector store cleared successfully.");
+  } catch (error) {
+    console.error("Error clearing vector store:", error);
     throw error;
   }
 }
