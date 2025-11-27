@@ -3,26 +3,26 @@ import { CSVLoader } from "langchain/document_loaders/fs/csv";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { PGVectorStore } from "@langchain/community/vectorstores/pgvector";
-import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
+import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
 
 dotenv.config();
 
 const embeddings = new OpenAIEmbeddings({
   openAIApiKey: process.env.OPENAI_API_KEY,
-  modelName: 'text-embedding-3-small',
+  modelName: process.env.AI_MODEL_NAME || "text-embedding-3-small",
   timeout: 60000,
   maxRetries: 5,
 });
 const config = {
   postgresConnectionOptions: {
-    type: "postgres",
-    host: "192.168.5.92",
-    port: 5433,
-    user: "postgres",
-    password: "root",
-    database: "ashisai",
+    type: process.env.POSTGRES_TYPE,
+    host: process.env.POSTGRES_HOST,
+    port: Number(process.env.POSTGRES_PORT),
+    user: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DB,
   },
   tableName: "vectorDB",
   columns: {
@@ -47,26 +47,26 @@ export async function indexTheDocs(filePath) {
   try {
     const fileExtension = path.extname(filePath).toLowerCase();
     let docs;
-    if (fileExtension === '.pdf') {
+    if (fileExtension === ".pdf") {
       const loader = new PDFLoader(filePath);
       docs = await loader.load();
-    } else if (fileExtension === '.xlsx' || fileExtension === '.xls') {
+    } else if (fileExtension === ".xlsx" || fileExtension === ".xls") {
       const loader = new CSVLoader(filePath);
       docs = await loader.load();
-    } else if (fileExtension === '.csv') {
+    } else if (fileExtension === ".csv") {
       const loader = new CSVLoader(filePath);
       docs = await loader.load();
-    } else if (fileExtension === '.txt') {
+    } else if (fileExtension === ".txt") {
       const loader = new CSVLoader(filePath);
       docs = await loader.load();
-    } else if (fileExtension === '.docx') {
+    } else if (fileExtension === ".docx") {
       const loader = new CSVLoader(filePath);
       docs = await loader.load();
     } else {
       throw new Error(`Unsupported file type: ${fileExtension}`);
     }
 
-   // console.log(`Loaded ${docs.length} documents from ${fileExtension} file`);
+    // console.log(`Loaded ${docs.length} documents from ${fileExtension} file`);
 
     const textSplitter = new RecursiveCharacterTextSplitter({
       chunkSize: 500,
@@ -77,23 +77,23 @@ export async function indexTheDocs(filePath) {
     console.log(`Split file into ${texts.length} chunks`);
 
     // Add file type to metadata
-    const documentsWithMetadata = texts.map(doc => ({
+    const documentsWithMetadata = texts.map((doc) => ({
       ...doc,
       metadata: {
         ...doc.metadata,
         source: filePath,
         fileType: fileExtension,
-        fileName: path.basename(filePath)
-      }
+        fileName: path.basename(filePath),
+      },
     }));
 
     await vectorStore.addDocuments(documentsWithMetadata);
-    
+
     // Clean up uploaded file after processing
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
-    
+
     console.log("Documents indexed successfully.");
     return { success: true, chunks: texts.length, fileType: fileExtension };
   } catch (error) {
