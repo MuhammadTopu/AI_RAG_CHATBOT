@@ -33,7 +33,7 @@ app.use('/api', ragRoute);
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
-    message: 'RAG API is running',
+    message: 'Server is running',
     timestamp: new Date().toISOString()
   });
 });
